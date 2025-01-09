@@ -7,19 +7,15 @@ public class Main {
     Scanner input = new Scanner(System.in);
 
     // Konstanta Paket Haji dan Tambahan Opsional
-    final double[] PAKET_HAJI = { 40000000, 70000000, 120000000 };
-    final double[] OPSIONAL = { 5000000, 10000000, 7000000 };
-    final double INFLASI = 0.05;
-    final double SUBSIDI_USIA_LANJUT = 0.10;
-    final double DISKON_UANG_MUKA = 2000000;
+    final double[] PAKET_HAJI = { 40_000_000, 70_000_000, 120_000_000 };
+    final double[] OPSIONAL = { 5_000_000, 10_000_000, 7_000_000 };
+    final double INFLASI = 0.05, SUBSIDI_USIA_LANJUT = 0.10, DISKON_UANG_MUKA = 2_000_000;
 
     // Input Data
-    System.out.print(
-        "Pilih paket haji:\n1. Reguler (Rp40.000.000)\n2. Plus (Rp70.000.000)\n3. VIP (Rp120.000.000)\nMasukan pilihan Anda (1-3): ");
+    System.out.print("Pilih paket haji:\n1. Reguler (Rp40.000.000)\n2. Plus (Rp70.000.000)\n3. VIP (Rp120.000.000)\nMasukan pilihan Anda (1-3): ");
     double pilihanPaketHaji = PAKET_HAJI[input.nextInt() - 1];
 
-    System.out.print(
-        "Tambahan opsional yang tersedia:\n1. Asuransi Kesehatan (Rp5.000.000)\n2. Hotel Masjidil Haram (Rp10.000.000)\n3. Upgrade layanan katering (Rp7.000.000)\nMasukan angka tambahan yang Anda pilih (pisahkan dengan koma, contoh: 1,3): ");
+    System.out.print("Tambahan opsional yang tersedia:\n1. Asuransi Kesehatan (Rp5.000.000)\n2. Hotel Masjidil Haram (Rp10.000.000)\n3. Upgrade layanan katering (Rp7.000.000)\nMasukan angka tambahan yang Anda pilih (pisahkan dengan koma, contoh: 1,3): ");
     String[] pilihanTambahan = input.next().split(",");
 
     System.out.print("Masukan usia calon jamaah: ");
@@ -44,16 +40,12 @@ public class Main {
     }
 
     // Diskon/Subsidi
-    double totalDiskon = 0;
-    if (usia >= 60)
-      totalDiskon += SUBSIDI_USIA_LANJUT;
-    if (uangMuka >= 10000000)
-      totalDiskon += DISKON_UANG_MUKA;
+    double totalDiskon = (usia >= 60 ? SUBSIDI_USIA_LANJUT : 0) + (uangMuka >= 10_000_000 ? DISKON_UANG_MUKA : 0);
 
     // Hitung Biaya Setelah Inflasi
     for (int i = 1; i <= tahun; i++) {
-      pilihanPaketHaji += pilihanPaketHaji * INFLASI;
-      totalTambahan += totalTambahan * INFLASI;
+      pilihanPaketHaji *= (1 + INFLASI);
+      totalTambahan *= (1 + INFLASI);
     }
     double totalBiayaSetelahInflasi = pilihanPaketHaji + totalTambahan;
 
@@ -61,13 +53,8 @@ public class Main {
     double biayaAkhir = totalBiayaSetelahInflasi - (totalBiayaSetelahInflasi * totalDiskon);
 
     // Output Simulasi Biaya Haji
-    System.out.println("\n### Simulasi Biaya Haji ###");
-    System.out.println("Paket yang dipilih: Rp" + pilihanPaketHaji);
-    System.out.println("Biaya tambahan: Rp" + totalTambahan);
-    System.out.println("Total biaya awal: Rp" + (pilihanPaketHaji + totalTambahan));
-    System.out.println("Total biaya setelah inflasi: Rp" + totalBiayaSetelahInflasi);
-    System.out.println("Diskon/Subsidi: Rp" + (totalBiayaSetelahInflasi * totalDiskon));
-    System.out.println("Biaya akhir setelah diskon/subsidi: Rp" + biayaAkhir);
+    System.out.printf("\n### Simulasi Biaya Haji ###\nPaket yang dipilih: Rp%.0f\nBiaya tambahan: Rp%.0f\nTotal biaya awal: Rp%.0f\nTotal biaya setelah inflasi: Rp%.0f\nDiskon/Subsidi: Rp%.0f\nBiaya akhir setelah diskon/subsidi: Rp%.0f\n",
+        pilihanPaketHaji, totalTambahan, pilihanPaketHaji + totalTambahan, totalBiayaSetelahInflasi, totalBiayaSetelahInflasi * totalDiskon, biayaAkhir);
 
     // Simulasi Menabung
     int bulanMenabung = (int) Math.ceil((biayaAkhir - uangMuka - simpananAwal) / tabunganPerBulan);
@@ -75,11 +62,8 @@ public class Main {
     int bulanSisa = bulanMenabung % 12;
 
     // Output Simulasi Menabung
-    System.out.println("\n### Simulasi Menabung ###");
-    System.out.println("Simpanan awal: Rp" + simpananAwal);
-    System.out.println("Tabungan bulanan: Rp" + tabunganPerBulan);
-    System.out.println("Uang muka: Rp" + uangMuka);
-    System.out.println("Waktu menabung: " + bulanMenabung + " bulan (" + tahunMenabung + " tahun " + bulanSisa + " bulan)");
+    System.out.printf("\n### Simulasi Menabung ###\nSimpanan awal: Rp%d\nTabungan bulanan: Rp%d\nUang muka: Rp%d\nWaktu menabung: %d bulan (%d tahun %d bulan)\n",
+        simpananAwal, tabunganPerBulan, uangMuka, bulanMenabung, tahunMenabung, bulanSisa);
 
     input.close();
   }
