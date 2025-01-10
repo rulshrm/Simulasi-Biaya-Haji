@@ -6,14 +6,28 @@ public class Main {
   public static void main(String[] args) {
     Scanner input = new Scanner(System.in);
 
-    // Konstanta Paket Haji dan Tambahan Opsional
-    final double[] PAKET_HAJI = { 40_000_000, 70_000_000, 120_000_000 };
-    final double[] OPSIONAL = { 5_000_000, 10_000_000, 7_000_000 };
-    final double INFLASI = 0.05, SUBSIDI_USIA_LANJUT = 0.10, DISKON_UANG_MUKA = 2_000_000;
+    // Paket Haji dan Tambahan Opsional
+    double paketHajiReguler = 40000000;
+    double paketHajiPlus = 70000000;
+    double paketHajiVIP = 120000000;
+    double opsionalAsuransi = 5000000;
+    double opsionalHotel = 10000000;
+    double opsionalKatering = 7000000;
+    double inflasi = 0.05;
+    double subsidiUsiaLanjut = 0.10;
+    double diskonUangMuka = 2000000;
 
     // Input Data
     System.out.print("Pilih paket haji:\n1. Reguler (Rp40.000.000)\n2. Plus (Rp70.000.000)\n3. VIP (Rp120.000.000)\nMasukan pilihan Anda (1-3): ");
-    double pilihanPaketHaji = PAKET_HAJI[input.nextInt() - 1];
+    double pilihanPaketHaji = 0;
+    int pilihanPaket = input.nextInt();
+    if (pilihanPaket == 1) {
+      pilihanPaketHaji = paketHajiReguler;
+    } else if (pilihanPaket == 2) {
+      pilihanPaketHaji = paketHajiPlus;
+    } else if (pilihanPaket == 3) {
+      pilihanPaketHaji = paketHajiVIP;
+    }
 
     System.out.print("Tambahan opsional yang tersedia:\n1. Asuransi Kesehatan (Rp5.000.000)\n2. Hotel Masjidil Haram (Rp10.000.000)\n3. Upgrade layanan katering (Rp7.000.000)\nMasukan angka tambahan yang Anda pilih (pisahkan dengan koma, contoh: 1,3): ");
     String[] pilihanTambahan = input.next().split(",");
@@ -36,16 +50,29 @@ public class Main {
     // Hitung Biaya Tambahan
     double totalTambahan = 0;
     for (String tambahan : pilihanTambahan) {
-      totalTambahan += OPSIONAL[Integer.parseInt(tambahan) - 1];
+      int pilihan = Integer.parseInt(tambahan);
+      if (pilihan == 1) {
+        totalTambahan += opsionalAsuransi;
+      } else if (pilihan == 2) {
+        totalTambahan += opsionalHotel;
+      } else if (pilihan == 3) {
+        totalTambahan += opsionalKatering;
+      }
     }
 
     // Diskon/Subsidi
-    double totalDiskon = (usia >= 60 ? SUBSIDI_USIA_LANJUT : 0) + (uangMuka >= 10_000_000 ? DISKON_UANG_MUKA : 0);
+    double totalDiskon = 0;
+    if (usia >= 60) {
+      totalDiskon += subsidiUsiaLanjut;
+    }
+    if (uangMuka >= 10000000) {
+      totalDiskon += diskonUangMuka;
+    }
 
     // Hitung Biaya Setelah Inflasi
     for (int i = 1; i <= tahun; i++) {
-      pilihanPaketHaji *= (1 + INFLASI);
-      totalTambahan *= (1 + INFLASI);
+      pilihanPaketHaji *= (1 + inflasi);
+      totalTambahan *= (1 + inflasi);
     }
     double totalBiayaSetelahInflasi = pilihanPaketHaji + totalTambahan;
 
